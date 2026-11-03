@@ -124,6 +124,24 @@ dl.facts dd { margin: 0; font-weight: 500; text-align: end; }
 .proj-click { position: relative; cursor: pointer; }
 .proj-click .stretch::after { content: ""; position: absolute; inset: 0; border-radius: 12px; }
 .proj-click .links a:not(.stretch) { position: relative; z-index: 1; }
+/* project categories: cards outside, each opens a dialog with its project cards */
+.cats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+.cat { font: inherit; color: inherit; text-align: start; cursor: pointer; display: flex; flex-direction: column; gap: 10px; min-width: 0; background: var(--glass); border: 1px solid var(--line); border-radius: 12px; padding: 24px; transition: border-color .2s, transform .2s; }
+.cat:hover, .cat:focus-visible { border-color: var(--accent); transform: translateY(-3px); outline: none; }
+.cat .num { font: 12px var(--font-mono); color: var(--warm); letter-spacing: 0.06em; direction: ltr; text-align: start; }
+.cat h3 { margin: 0; font-family: var(--font-display); font-size: 22px; line-height: 1.3; }
+.cat p { margin: 0; color: var(--muted); font-size: 15px; }
+.cat .count { margin-top: 4px; font: 13px var(--font-mono); color: var(--soft); }
+dialog.cat-dialog { width: min(920px, 92vw); max-height: 86vh; margin: auto; padding: 0; color: var(--fg); background: var(--surface); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; }
+dialog.cat-dialog[open] { display: flex; flex-direction: column; animation: dlg .22s ease; }
+dialog.cat-dialog::backdrop { background: rgb(0 0 0 / .72); backdrop-filter: blur(3px); }
+@keyframes dlg { from { opacity: 0; transform: translateY(14px) scale(.98); } to { opacity: 1; transform: none; } }
+.dlg-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 20px 24px; border-bottom: 1px solid var(--line); }
+.dlg-head h3 { margin: 0; font-family: var(--font-display); font-size: 22px; }
+.dlg-close { font: 20px/1 var(--font-body); cursor: pointer; width: 40px; height: 40px; flex: none; color: var(--soft); background: transparent; border: 1px solid var(--line); border-radius: 10px; }
+.dlg-close:hover, .dlg-close:focus-visible { border-color: var(--accent); color: var(--accent); outline: none; }
+.dlg-body { overflow-y: auto; padding: 24px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; align-content: start; min-height: 120px; }
+.dlg-body .proj { background: var(--glass); }
 .note { margin-top: 16px; font-size: 13px; color: var(--muted); }
 
 .contact { display: grid; gap: 20px; justify-items: start; }
@@ -138,7 +156,8 @@ footer { padding-top: 32px; border-top: 1px solid var(--line); color: var(--mute
 
 @media (max-width: 800px) {
   .hero, .about { grid-template-columns: 1fr; }
-  .skills, .projects { grid-template-columns: 1fr; }
+  .skills, .projects, .cats, .dlg-body { grid-template-columns: 1fr; }
+  dialog.cat-dialog { width: 94vw; max-height: 88vh; }
   .hero { padding-block: 40px; }
 }
 /* typed line in the hero */
@@ -305,30 +324,76 @@ html.welcome-open #welcome { animation: wgone 0s linear 12s forwards; }
   <section id="projects">
     <p class="eyebrow"><span class="ar">المشاريع</span><span class="en">Projects</span></p>
     <h2><span class="ar">أعمال مختارة</span><span class="en">Selected work</span></h2>
-    <div class="projects">
-      <article class="proj proj-click">
-        <span class="tag">WEBSITE · MENU</span>
-        <h3><span class="ar">Cinder &amp; Salt</span><span class="en">Cinder &amp; Salt</span></h3>
-        <p><span class="ar">موقع قائمة طعام لمطعم، متجاوب ومناسب للعرض على الجوال.</span><span class="en">A responsive restaurant menu website, built to read well on mobile.</span></p>
-        <div class="chips"><span class="chip">HTML</span><span class="chip">Responsive</span></div>
-        <div class="links"><a class="stretch" href="https://cinder-salt-ashen.vercel.app/" target="_blank" rel="noopener"><span class="ar">معاينة</span><span class="en">Live demo</span></a></div>
-      </article>
-      <article class="proj proj-click">
-        <span class="tag">E-COMMERCE · FULL-STACK</span>
-        <h3><span class="ar">متجر إلكتروني</span><span class="en">Online Store</span></h3>
-        <p><span class="ar">متجر كامل بسلة مشتريات ودفع وإدارة منتجات ولوحة تحكم للمالك.</span><span class="en">A complete store with cart, checkout, product management and an owner dashboard.</span></p>
-        <div class="chips"><span class="chip">TypeScript</span><span class="chip">PostgreSQL</span></div>
-        <div class="links"><a class="stretch" href="https://athar.andowl.workers.dev/" target="_blank" rel="noopener"><span class="ar">معاينة</span><span class="en">Live demo</span></a><a href="#projects">GitHub</a></div>
-      </article>
-      <article class="proj">
-        <span class="tag">API · PYTHON</span>
-        <h3><span class="ar">خدمة تحليل البيانات</span><span class="en">Data Insights API</span></h3>
-        <p><span class="ar">واجهة برمجية تجمع البيانات وتحوّلها إلى تقارير جاهزة للعرض.</span><span class="en">An API that collects data and turns it into report-ready summaries.</span></p>
-        <div class="chips"><span class="chip">Python</span><span class="chip">REST</span></div>
-        <div class="links"><a href="#projects"><span class="ar">التوثيق</span><span class="en">Docs</span></a><a href="#projects">GitHub</a></div>
-      </article>
+    <div class="cats">
+      <button class="cat" type="button" data-open="shops">
+      <span class="num">01</span>
+      <h3><span class="ar">متاجر إلكترونية</span><span class="en">Online Stores</span></h3>
+      <p><span class="ar">متاجر بسلة مشتريات ودفع ولوحة تحكم.</span><span class="en">Stores with cart, checkout and an owner dashboard.</span></p>
+      <span class="count"><span class="ar">مشروع واحد</span><span class="en">1 project</span></span>
+      </button>
+      <button class="cat" type="button" data-open="sites">
+      <span class="num">02</span>
+      <h3><span class="ar">مواقع مطاعم وخدمات</span><span class="en">Restaurant &amp; Service Sites</span></h3>
+      <p><span class="ar">مواقع تعريفية وقوائم طعام للأعمال.</span><span class="en">Informational sites and menus for businesses.</span></p>
+      <span class="count"><span class="ar">مشروع واحد</span><span class="en">1 project</span></span>
+      </button>
+      <button class="cat" type="button" data-open="apps">
+      <span class="num">03</span>
+      <h3><span class="ar">تطبيقات ويب</span><span class="en">Web Apps</span></h3>
+      <p><span class="ar">تطبيقات تفاعلية تعمل من المتصفح.</span><span class="en">Interactive apps that run in the browser.</span></p>
+      </button>
+      <button class="cat" type="button" data-open="apis">
+      <span class="num">04</span>
+      <h3><span class="ar">واجهات برمجية وأنظمة</span><span class="en">APIs &amp; Systems</span></h3>
+      <p><span class="ar">خدمات خلفية وأنظمة تربط البيانات.</span><span class="en">Back-end services and data systems.</span></p>
+      </button>
     </div>
-    <p class="note"><span class="ar">هذه أمثلة مبدئية، تُستبدل بمشاريعك الحقيقية وروابطها.</span><span class="en">These are example projects, to be replaced with your real work and links.</span></p>
+    <dialog class="cat-dialog" id="dlg-shops" aria-labelledby="dt-shops">
+      <div class="dlg-head">
+        <h3 id="dt-shops"><span class="ar">متاجر إلكترونية</span><span class="en">Online Stores</span></h3>
+        <button class="dlg-close" type="button" aria-label="Close">&times;</button>
+      </div>
+      <div class="dlg-body">
+    <article class="proj proj-click">
+      <span class="tag">E-COMMERCE · FULL-STACK</span>
+      <h3><span class="ar">متجر إلكتروني</span><span class="en">Online Store</span></h3>
+      <p><span class="ar">متجر كامل بسلة مشتريات ودفع وإدارة منتجات ولوحة تحكم للمالك.</span><span class="en">A complete store with cart, checkout, product management and an owner dashboard.</span></p>
+      <div class="chips"><span class="chip">TypeScript</span><span class="chip">PostgreSQL</span></div>
+      <div class="links"><a class="stretch" href="https://athar.andowl.workers.dev/" target="_blank" rel="noopener"><span class="ar">معاينة</span><span class="en">Live demo</span></a><a href="#projects">GitHub</a></div>
+    </article>
+      </div>
+    </dialog>
+    <dialog class="cat-dialog" id="dlg-sites" aria-labelledby="dt-sites">
+      <div class="dlg-head">
+        <h3 id="dt-sites"><span class="ar">مواقع مطاعم وخدمات</span><span class="en">Restaurant &amp; Service Sites</span></h3>
+        <button class="dlg-close" type="button" aria-label="Close">&times;</button>
+      </div>
+      <div class="dlg-body">
+    <article class="proj proj-click">
+      <span class="tag">WEBSITE · MENU</span>
+      <h3><span class="ar">Cinder &amp; Salt</span><span class="en">Cinder &amp; Salt</span></h3>
+      <p><span class="ar">موقع قائمة طعام لمطعم، متجاوب ومناسب للعرض على الجوال.</span><span class="en">A responsive restaurant menu website, built to read well on mobile.</span></p>
+      <div class="chips"><span class="chip">HTML</span><span class="chip">Responsive</span></div>
+      <div class="links"><a class="stretch" href="https://cinder-salt-ashen.vercel.app/" target="_blank" rel="noopener"><span class="ar">معاينة</span><span class="en">Live demo</span></a></div>
+    </article>
+      </div>
+    </dialog>
+    <dialog class="cat-dialog" id="dlg-apps" aria-labelledby="dt-apps">
+      <div class="dlg-head">
+        <h3 id="dt-apps"><span class="ar">تطبيقات ويب</span><span class="en">Web Apps</span></h3>
+        <button class="dlg-close" type="button" aria-label="Close">&times;</button>
+      </div>
+      <div class="dlg-body">
+      </div>
+    </dialog>
+    <dialog class="cat-dialog" id="dlg-apis" aria-labelledby="dt-apis">
+      <div class="dlg-head">
+        <h3 id="dt-apis"><span class="ar">واجهات برمجية وأنظمة</span><span class="en">APIs &amp; Systems</span></h3>
+        <button class="dlg-close" type="button" aria-label="Close">&times;</button>
+      </div>
+      <div class="dlg-body">
+      </div>
+    </dialog>
   </section>
 
   <section id="contact">
@@ -505,7 +570,7 @@ html.welcome-open #welcome { animation: wgone 0s linear 12s forwards; }
   document.addEventListener("pf-enter", start);
 
   if (!("IntersectionObserver" in window) || still) return;
-  var els = [].slice.call(document.querySelectorAll("section > .eyebrow, section > h2, .about > *, .skills > div, .projects > .proj, .contact > *, footer"));
+  var els = [].slice.call(document.querySelectorAll("section > .eyebrow, section > h2, .about > *, .skills > div, .cats > .cat, .contact > *, footer"));
   var vh = window.innerHeight;
   var io = new IntersectionObserver(function (entries) {
     entries.forEach(function (en) {
@@ -522,6 +587,21 @@ html.welcome-open #welcome { animation: wgone 0s linear 12s forwards; }
     t.classList.add("rv", "pre");
     t.style.transitionDelay = Math.min(idx, 3) * 90 + "ms";
     io.observe(t);
+  });
+})();
+</script>
+<script>
+(function () {
+  var dlgs = document.querySelectorAll("dialog.cat-dialog");
+  document.querySelectorAll("[data-open]").forEach(function (b) {
+    b.addEventListener("click", function () {
+      var d = document.getElementById("dlg-" + b.getAttribute("data-open"));
+      if (d && d.showModal) d.showModal();
+    });
+  });
+  dlgs.forEach(function (d) {
+    d.querySelector(".dlg-close").addEventListener("click", function () { d.close(); });
+    d.addEventListener("click", function (e) { if (e.target === d) d.close(); });
   });
 })();
 </script>
