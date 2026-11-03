@@ -152,6 +152,19 @@ dialog.cat-dialog::backdrop { background: rgb(0 0 0 / .72); backdrop-filter: blu
 .socials { display: flex; flex-wrap: wrap; gap: 20px; font-family: var(--font-mono); font-size: 14px; direction: ltr; }
 .socials a { color: var(--muted); text-decoration: none; }
 .socials a:hover { color: var(--accent); }
+/* contact: three equal glass cards, centred */
+#contact { text-align: center; }
+#contact .contact { justify-items: center; }
+#contact .contact p { text-align: center; margin-inline: auto; }
+.ccards { width: 100%; max-width: 900px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.ccard { min-width: 0; min-height: 168px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 22px 18px; text-align: center; text-decoration: none; color: var(--fg); background: var(--glass); border: 1px solid var(--line); border-radius: 12px; transition: border-color .2s, transform .2s; }
+a.ccard:hover, .ccard:hover { border-color: var(--accent); transform: translateY(-3px); }
+.ccard .ck { font: 11.5px var(--font-mono); color: var(--warm); letter-spacing: 0.06em; }
+.ccard .cv { font: 500 16px var(--font-mono); direction: ltr; background: none; border: 0; padding: 0; max-width: 100%; overflow-wrap: anywhere; user-select: all; color: var(--fg); }
+#mailText.cv { font-size: 12.5px; }
+.ccard .ca { font: 500 14px var(--font-body); color: var(--accent); background: none; border: 0; padding: 0; cursor: pointer; }
+.ccard:hover .ca { text-decoration: underline; }
+@media (max-width: 800px) { .ccards { grid-template-columns: 1fr; max-width: 420px; } .ccard { min-height: 140px; } }
 footer { padding-top: 32px; border-top: 1px solid var(--line); color: var(--muted); font-size: 13px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
 
 @media (max-width: 800px) {
@@ -400,13 +413,24 @@ html.welcome-open #welcome { animation: wgone 0s linear 12s forwards; }
     <p class="eyebrow"><span class="ar">تواصل</span><span class="en">Contact</span></p>
     <h2><span class="ar">خلّينا نشتغل على فكرتك</span><span class="en">Let's work on your idea</span></h2>
     <div class="contact">
-      <p><span class="ar">عندك مشروع أو فرصة عمل؟ راسلني وأرد عليك خلال يوم أو يومين.</span><span class="en">Have a project or a role in mind? Write to me and I reply within a day or two.</span></p>
-      <div class="mail">
-        <code id="mailText">jean.doummar1234567890@gmail.com</code>
-        <button type="button" id="copyBtn"><span class="ar">نسخ البريد</span><span class="en">Copy email</span></button>
+      <p><span class="ar">عندك مشروع أو فرصة عمل؟ راسلني وأرد عليك بأقرب وقت.</span><span class="en">Have a project or a role in mind? Write to me and I'll reply as soon as I can.</span></p>
+      <div class="ccards">
+        <a class="ccard" href="https://wa.me/963988392884" target="_blank" rel="noopener">
+          <span class="ck">WHATSAPP</span>
+          <span class="cv" dir="ltr">+963 988 392 884</span>
+          <span class="ca"><span class="ar">راسلني على واتساب</span><span class="en">Message me</span></span>
+        </a>
+        <div class="ccard">
+          <span class="ck">EMAIL</span>
+          <code class="cv" id="mailText">jean.doummar1234567890@gmail.com</code>
+          <button type="button" id="copyBtn" class="ca"><span class="ar">نسخ البريد</span><span class="en">Copy email</span></button>
+        </div>
+        <a class="ccard" href="https://www.instagram.com/jean.dmrr" target="_blank" rel="noopener">
+          <span class="ck">INSTAGRAM</span>
+          <span class="cv" dir="ltr">@jean.dmrr</span>
+          <span class="ca"><span class="ar">تابعني على انستغرام</span><span class="en">Follow me</span></span>
+        </a>
       </div>
-      <div class="cta"><a class="btn primary" href="https://wa.me/963988392884"><span class="ar">راسلني على واتساب</span><span class="en">Message on WhatsApp</span></a><a class="btn" href="https://www.instagram.com/jean.dmrr">Instagram</a></div>
-      <div class="socials"><span>WhatsApp +963 988 392 884</span><a href="https://www.instagram.com/jean.dmrr">@jean.dmrr</a></div>
     </div>
   </section>
 
