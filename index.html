@@ -194,8 +194,8 @@ html.welcome-open { overflow: hidden; }
   font-size: clamp(2.1rem, 8vw, 3.6rem); line-height: 1.08; color: var(--fg); text-wrap: balance;
   text-shadow: 0 0 6px #000, 0 0 16px #000, 0 0 34px #000;
 }
-.welcome .w-photo, .welcome .w-title { animation: wrise .8s cubic-bezier(.2,.8,.2,1) .2s backwards; transition: opacity .55s ease, translate .55s ease; }
-.welcome .w-title { animation-delay: .35s; }
+.welcome .w-photo, .welcome .w-title { animation: wrise .55s cubic-bezier(.2,.8,.2,1) .1s backwards; transition: opacity .55s ease, translate .55s ease; }
+.welcome .w-title { animation-delay: .2s; }
 .welcome.leave .w-photo, .welcome.leave .w-title { opacity: 0; translate: 0 -10px; }
 @keyframes wrise { from { opacity: 0; translate: 0 16px; } to { opacity: 1; translate: 0 0; } }
 
@@ -428,8 +428,8 @@ html.welcome-open #welcome { animation: wgone 0s linear 12s forwards; }
   root.classList.add("welcome-open");
   behind.forEach(function (n) { if (n) n.setAttribute("inert", ""); });
 
-  var HOLD = 2200;        /* how long the welcome rests before the camera starts to move (ms) */
-  var FADE_AT = 1200;     /* the site starts fading in this long after the camera starts to move (ms) */
+  var HOLD = 1300;        /* how long the welcome rests before the camera starts to move (ms) */
+  var FADE_AT = 800;     /* the site starts fading in this long after the camera starts to move (ms) */
   var done = false, timer = null;
 
   function release() {
@@ -669,7 +669,7 @@ html.welcome-open #welcome { animation: wgone 0s linear 12s forwards; }
   /* intro: with the welcome screen the camera starts far and low, then flies in when "pf-fly" fires */
   var still0 = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
   var intro = (document.getElementById("welcome") && !still0) ? 0 : 1, introRun = false;
-  var INTRO_TIME = 3;
+  var INTRO_TIME = 2;
   function introEase(t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
   document.addEventListener("pf-fly", function () { introRun = true; boost = Math.max(boost, 3.5); });
   var board = new THREE.Group();
@@ -927,7 +927,7 @@ html.welcome-open #welcome { animation: wgone 0s linear 12s forwards; }
     var dt = Math.min(0.1, raw);
     last = now; time += dt;
     /* adaptive resolution: if the average frame is slower than ~40 fps, drop the render scale a step */
-    if (time > 3.5 && (!introRun || intro >= 1)) {   /* never resize the canvas during warm-up or the fly-in: it causes a visible hitch */
+    if (time > 3 && (!introRun || intro >= 1)) {   /* never resize the canvas during warm-up or the fly-in: it causes a visible hitch */
       fpsT += raw; fpsN++;
       if (fpsT > 1.5) {
         var avg = fpsT / fpsN; fpsT = 0; fpsN = 0;
