@@ -415,19 +415,19 @@ html.welcome-open #welcome { animation: wgone 0s linear 12s forwards; }
     <div class="contact">
       <p><span class="ar">عندك مشروع أو فرصة عمل؟ راسلني وأرد عليك بأقرب وقت.</span><span class="en">Have a project or a role in mind? Write to me and I'll reply as soon as I can.</span></p>
       <div class="ccards">
-        <a class="ccard" href="https://wa.me/963988392884" target="_blank" rel="noopener">
+        <a class="ccard" id="waCard" href="https://wa.me/963988392884?text=Hi%20Jean%2C%20I%20saw%20your%20portfolio%20and%20I%27d%20like%20to%20talk%20about%20a%20project." target="_blank" rel="noopener">
           <span class="ck">WHATSAPP</span>
           <span class="cv" dir="ltr">+963 988 392 884</span>
           <span class="ca"><span class="ar">راسلني على واتساب</span><span class="en">Message me</span></span>
         </a>
-        <div class="ccard">
+        <a class="ccard" id="mailCard" href="mailto:jean.doummar1234567890@gmail.com?subject=Project%20inquiry&amp;body=Hi%20Jean%2C%0A%0AI%20saw%20your%20portfolio%20and%20I%27d%20like%20to%20talk%20about%20a%20project.">
           <span class="ck">EMAIL</span>
-          <code class="cv" id="mailText">jean.doummar1234567890@gmail.com</code>
-          <button type="button" id="copyBtn" class="ca"><span class="ar">نسخ البريد</span><span class="en">Copy email</span></button>
-        </div>
-        <a class="ccard" href="https://www.instagram.com/jean.dmrr" target="_blank" rel="noopener">
+          <span class="cv" id="mailText">jean.doummar1234567890@gmail.com</span>
+          <span class="ca"><span class="ar">أرسل بريداً</span><span class="en">Send an email</span></span>
+        </a>
+        <a class="ccard" href="https://www.instagram.com/jean_devv" target="_blank" rel="noopener">
           <span class="ck">INSTAGRAM</span>
-          <span class="cv" dir="ltr">@jean.dmrr</span>
+          <span class="cv" dir="ltr">@jean_devv</span>
           <span class="ca"><span class="ar">تابعني على انستغرام</span><span class="en">Follow me</span></span>
         </a>
       </div>
@@ -645,22 +645,19 @@ html.welcome-open #welcome { animation: wgone 0s linear 12s forwards; }
   setLang(saved === "ar" ? "ar" : "en");
   btn.addEventListener("click", function () { setLang(root.lang === "ar" ? "en" : "ar", true); });
 
-  var copy = document.getElementById("copyBtn");
-  copy.addEventListener("click", function () {
-    var t = document.getElementById("mailText");
-    function done() {
-      var old = copy.innerHTML;
-      copy.textContent = root.lang === "ar" ? "تم النسخ" : "Copied";
-      setTimeout(function () { copy.innerHTML = old; }, 1600);
-    }
-    function fallback() {
-      var r = document.createRange(); r.selectNodeContents(t);
-      var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
-    }
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(t.textContent).then(done, fallback);
-    } else { fallback(); }
-  });
+  /* WhatsApp and email open with a ready-written message, in the language the site is showing */
+  var MSG = {
+    ar: { wa: "مرحباً جان، شفت البورتفوليو تبعك وحابب أحكي معك عن مشروع.", sub: "استفسار عن مشروع", body: "مرحباً جان،\n\nشفت البورتفوليو تبعك وحابب أحكي معك عن مشروع." },
+    en: { wa: "Hi Jean, I saw your portfolio and I'd like to talk about a project.", sub: "Project inquiry", body: "Hi Jean,\n\nI saw your portfolio and I'd like to talk about a project." }
+  };
+  function setContactLinks() {
+    var m = MSG[root.lang === "en" ? "en" : "ar"];
+    var wa = document.getElementById("waCard"), ml = document.getElementById("mailCard");
+    if (wa) wa.href = "https://wa.me/963988392884?text=" + encodeURIComponent(m.wa);
+    if (ml) ml.href = "mailto:jean.doummar1234567890@gmail.com?subject=" + encodeURIComponent(m.sub) + "&body=" + encodeURIComponent(m.body);
+  }
+  setContactLinks();
+  new MutationObserver(setContactLinks).observe(root, { attributes: true, attributeFilter: ["lang"] });
 })();
 </script>
 <script>
